@@ -14,3 +14,4 @@ then i installed vite and used that to setup my vue workspace in vanilla js plus
 
 also quickly created a clean folder structure for frontend and backend
 
+asked claude to setup routing and the 5 pages within vue as that not the essence of the exercise
