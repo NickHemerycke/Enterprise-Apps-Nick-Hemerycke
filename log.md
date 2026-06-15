@@ -22,3 +22,5 @@ we set up our location en event models
 i used generationtype.identity instead off auto because i've read that it's more predicitable and stable within spring boot 3
 
 added some extra safties into my location class based on logical assumptions like non negative groups and no nameless locations
+
+

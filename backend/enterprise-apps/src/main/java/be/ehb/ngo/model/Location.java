@@ -8,9 +8,9 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(messsage = "name is required")
+    @NotBlank(message = "name is required")
     private String name;
-    @NotBlank(messsage = "address is required")
+    @NotBlank(message = "address is required")
     private String address;
     @DecimalMin(value = "0.0", inclusive = false, message = "capacity must be greater than 0")
     private int capacity;
