@@ -1,10 +1,11 @@
 <script setup>
-import { computed } from 'vue'
+import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useEvents } from '../composables/useEvents'
 
-const { getRecentEvents } = useEvents()
-const recentEvents = computed(() => getRecentEvents(10))
+const { events, fetchEvents } = useEvents()
+
+onMounted(fetchEvents)
 </script>
 
 <template>
@@ -21,12 +22,12 @@ const recentEvents = computed(() => getRecentEvents(10))
       </thead>
       <tbody>
         <tr
-          v-for="event in recentEvents"
+          v-for="event in events"
           :key="event.id"
           class="border-t border-gray-200 odd:bg-white even:bg-gray-50"
         >
-          <td class="px-4 py-3 font-medium text-gray-900">{{ event.title }}</td>
-          <td class="px-4 py-3 text-gray-700">{{ event.organisation }}</td>
+          <td class="px-4 py-3 font-medium text-gray-900">{{ event.name }}</td>
+          <td class="px-4 py-3 text-gray-700">{{ event.organizer }}</td>
           <td class="px-4 py-3 text-right">
             <RouterLink
               :to="{ name: 'details', params: { id: event.id } }"

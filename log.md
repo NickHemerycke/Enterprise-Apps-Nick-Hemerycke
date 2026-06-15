@@ -25,4 +25,12 @@ added some extra safties into my location class based on logical assumptions lik
 
 i added the repos and controllers
 
+didn't feel like  figuring out mailtrap was out the scope so decided to make it a dummy endpoint that just takes a form and saves it
 
+asked copilot to hookup all my endpoints by passing through the right endpoints to the frontend
+
+added some basic locations all the capitals of belgium
+
+had some compilation error of spring boot and also asked if ai could narrow it down
+
+and also asked ai to rewrite my raw readme as it was i have dyslexia

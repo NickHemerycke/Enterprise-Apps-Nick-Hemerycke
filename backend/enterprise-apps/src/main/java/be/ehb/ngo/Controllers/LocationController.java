@@ -16,13 +16,11 @@ public class LocationController {
     @Autowired
     private LocationRepository locationRepository;
 
-    // GET: Haal alle locaties op voor de dropdown in het Vue-formulier
     @GetMapping
     public List<Location> getAllLocations() {
         return locationRepository.findAll();
     }
 
-    // POST: Optioneel, om makkelijk een nieuwe locatie toe te voegen via de frontend of Postman
     @PostMapping
     public Location createLocation(@Valid @RequestBody Location location) {
         return locationRepository.save(location);

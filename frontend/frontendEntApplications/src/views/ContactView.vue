@@ -9,11 +9,13 @@ const form = reactive({
 
 const errors = reactive({})
 const submitted = ref(false)
+const submitError = ref('')
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function validate() {
   Object.keys(errors).forEach((key) => delete errors[key])
+  submitError.value = ''
 
   if (!form.name.trim()) errors.name = 'Naam is verplicht.'
   if (!form.message.trim()) errors.message = 'Bericht is verplicht.'
@@ -27,14 +29,35 @@ function validate() {
   return Object.keys(errors).length === 0
 }
 
-function onSubmit() {
+async function onSubmit() {
   if (!validate()) return
 
-  // TODO: send the message to the administrators via mailtrap.io
-  submitted.value = true
-  form.name = ''
-  form.email = ''
-  form.message = ''
+  try {
+    const response = await fetch('http://localhost:8080/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: form.email,
+        message: form.message,
+        name: form.name,
+      }),
+    })
+
+    if (!response.ok) {
+      const message = await response.text()
+      throw new Error(message || 'Kon bericht niet verzenden.')
+    }
+
+    submitted.value = true
+    form.name = ''
+    form.email = ''
+    form.message = ''
+  } catch (error) {
+    console.error(error)
+    submitError.value = 'Kon bericht niet verzenden. Probeer het later opnieuw.'
+  }
 }
 </script>
 
@@ -44,6 +67,10 @@ function onSubmit() {
 
     <p v-if="submitted" class="mb-4 rounded-md bg-green-50 px-4 py-3 text-green-700">
       Je bericht werd verzonden. Bedankt!
+    </p>
+
+    <p v-if="submitError" class="mb-4 rounded-md bg-red-50 px-4 py-3 text-red-700">
+      {{ submitError }}
     </p>
 
     <form class="flex flex-col gap-4" novalidate @submit.prevent="onSubmit">

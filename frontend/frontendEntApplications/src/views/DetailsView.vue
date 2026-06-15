@@ -1,12 +1,32 @@
 <script setup>
-import { computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useEvents } from '../composables/useEvents'
 
 const route = useRoute()
-const { getEventById } = useEvents()
+const { fetchEventById } = useEvents()
+const event = ref(null)
+const error = ref(null)
 
-const event = computed(() => getEventById(route.params.id))
+async function loadEvent() {
+  try {
+    const id = route.params.id
+    if (!id) {
+      error.value = 'Ongeldig evenement'
+      return
+    }
+
+    event.value = await fetchEventById(id)
+    if (!event.value) {
+      error.value = 'Dit evenement werd niet gevonden.'
+    }
+  } catch (err) {
+    console.error(err)
+    error.value = 'Kon evenement niet laden.'
+  }
+}
+
+onMounted(loadEvent)
 </script>
 
 <template>
@@ -16,21 +36,21 @@ const event = computed(() => getEventById(route.params.id))
     </RouterLink>
 
     <div v-if="event" class="mt-4">
-      <h1 class="text-3xl font-semibold text-gray-900">{{ event.title }}</h1>
-      <p class="mt-1 text-lg text-gray-600">{{ event.organisation }}</p>
+      <h1 class="text-3xl font-semibold text-gray-900">{{ event.name }}</h1>
+      <p class="mt-1 text-lg text-gray-600">{{ event.organizer }}</p>
 
       <dl class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Datum</dt>
-          <dd class="text-gray-900">{{ event.date }}</dd>
+          <dd class="text-gray-900">{{ event.date?.substring(0, 10) }}</dd>
         </div>
         <div>
           <dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Locatie</dt>
-          <dd class="text-gray-900">{{ event.location }}</dd>
+          <dd class="text-gray-900">{{ event.location?.name || 'Onbekend' }}</dd>
         </div>
         <div>
           <dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Contact</dt>
-          <dd class="text-gray-900">{{ event.email }}</dd>
+          <dd class="text-gray-900">{{ event.contact }}</dd>
         </div>
       </dl>
 
@@ -40,6 +60,6 @@ const event = computed(() => getEventById(route.params.id))
       </div>
     </div>
 
-    <p v-else class="mt-6 text-gray-700">Dit evenement werd niet gevonden.</p>
+    <p v-else class="mt-6 text-gray-700">{{ error || 'Evenement wordt geladen...' }}</p>
   </section>
 </template>
