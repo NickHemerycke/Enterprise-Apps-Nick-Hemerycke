@@ -23,4 +23,6 @@ i used generationtype.identity instead off auto because i've read that it's more
 
 added some extra safties into my location class based on logical assumptions like non negative groups and no nameless locations
 
+i added the repos and controllers
+
 
